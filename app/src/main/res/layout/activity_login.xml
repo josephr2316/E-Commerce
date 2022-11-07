@@ -18,11 +18,24 @@
         app:srcCompat="@drawable/ic_baseline_shopping_cart_24"
         android:contentDescription="@string/todo" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/e_commerse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:gravity="center"/>
+
     <EditText
         android:id="@+id/etEmail"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext"
         android:drawableStart="@drawable/ic_baseline_person"
         android:drawablePadding="8dp"
         android:ems="10"
@@ -31,14 +44,17 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
         android:autofillHints=""
+        android:background="@drawable/edittext"
         android:drawableStart="@drawable/ic_baseline_person"
         android:drawablePadding="8dp"
         android:ems="10"
@@ -55,6 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/forgot_password"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.665"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,20 +80,28 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:enabled="false"
         android:text="@string/log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:background="@drawable/button"/>
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
         android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
