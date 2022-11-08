@@ -15,22 +15,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ShimmerTextView shimmerTextView = findViewById(R.id.tvLoading);
-        Shimmer shimmer = new Shimmer()
-                .setDirection(Shimmer.ANIMATION_DIRECTION_LTR)
-                .setDuration(5000)
-                .setStartDelay(1000);
-        shimmer.start(shimmerTextView);
-
-        int time = 3000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                finish();
-            }
-        },time);
-
     }
 }
