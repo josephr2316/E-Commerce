@@ -19,7 +19,7 @@ import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    ActionBarDrawerToggle toogle;
+    ActionBarDrawerToggle toggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(viewMain);
 
         setSupportActionBar(binding.toolbar);
-        toogle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
-        binding.drawer.addDrawerListener(toogle);
-        toogle.syncState();
+        toggle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
+        binding.drawer.addDrawerListener(toggle);
+        toggle.syncState();
         //NavigationUI.setupWithNavController( binding.navView,navController);
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
