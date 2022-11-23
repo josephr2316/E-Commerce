@@ -1,5 +1,4 @@
 package com.pucmm.e_commerce;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -27,6 +26,14 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
+        });
+        binding.forgetPasswordBt.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ForgetPasswordActivity.class);
+            startActivity(intent);
+        });
+        binding.singUpBt.setOnClickListener(viewNew -> {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
         });
 
 

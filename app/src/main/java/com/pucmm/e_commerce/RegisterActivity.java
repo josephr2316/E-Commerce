@@ -1,8 +1,10 @@
 package com.pucmm.e_commerce;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +25,9 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityRegisterBinding binding;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
+    private User user;
+    AlertDialog.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +38,39 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        user = getIntent().getParcelableExtra("user");
+        if (user!=null)
+        {
+            binding.loginNowTv.setVisibility(View.GONE);
+            binding.forgetPasswordTv.setVisibility(View.GONE);
+        }
 
         binding.registerBt.setOnClickListener(view ->{
+            User newUser = new User();
+            newUser.setName(binding.nameEdt.getText().toString());
+            newUser.setUser(binding.userEdt.getText().toString());
+            newUser.setPassword(binding.passwordEdt.getText().toString());
+            newUser.setTelephoneNumber(binding.phoneEdt.getText().toString());
+            newUser.setAdmin(false);
+            if (user!=null)
+            {
+                builder = new AlertDialog.Builder(this);
+                builder.setMessage("El usuario es un administrador?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {newUser.setAdmin(true);}
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                newUser.setAdmin(false);
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
+            }
+
             firebaseAuth.createUserWithEmailAndPassword(binding.emailEdit.getText().toString(),binding.passwordEdt.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
@@ -42,17 +78,10 @@ public class RegisterActivity extends AppCompatActivity {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     DocumentReference df = firebaseFirestore.collection("Users").document(user.getUid());
                     //Map<String,Object> name = new HashMap<>();
-                    User newUser = null;
-                    newUser.setName(binding.nameEdt.getText().toString());
-                    newUser.setUser(binding.userEdt.getText().toString());
-                    newUser.setPassword(binding.passwordEdt.getText().toString());
-                    newUser.setTelephoneNumber(binding.phoneEdt.getText().toString());
-                    newUser.setAdmin(true);
+
                     df.set(newUser);
-
-
-                    //startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                    //finish();
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -61,6 +90,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
             });
+        });
+        binding.forgetPasswordTv.setOnClickListener(view -> {
+            Intent intent = new Intent(this,ForgetPasswordActivity.class);
+            startActivity(intent);
+        });
+        binding.loginNowTv.setOnClickListener(view -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
         });
 
     }

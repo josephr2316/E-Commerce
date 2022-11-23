@@ -8,6 +8,9 @@ public class User {
     private String telephoneNumber;
     private boolean isAdmin;
 
+    public User() {
+    }
+
     public User(String name, String user, String password, String telephoneNumber, boolean isAdmin) {
         this.name = name;
         this.user = user;
