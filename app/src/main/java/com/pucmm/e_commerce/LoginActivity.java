@@ -11,6 +11,7 @@ import android.view.View;
 import com.pucmm.e_commerce.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
+
     ActivityLoginBinding binding;
 
     @Override
