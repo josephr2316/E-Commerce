@@ -10,10 +10,12 @@
         android:id="@+id/imageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_shopping_cart_24" />
@@ -22,81 +24,119 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="@string/e_commerse"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/lEmail"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <EditText
-        android:id="@+id/etEmail"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
-        android:autofillHints=""
-        android:background="@drawable/edittext"
-        android:drawableStart="@drawable/ic_baseline_email"
-        android:drawablePadding="8dp"
-        android:ems="10"
         android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/lPassword"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:startIconDrawable="@drawable/ic_baseline_email">
 
-    <EditText
-        android:id="@+id/etPassword"
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textEmailAddress"
+            tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:background="@drawable/edittext"
-        android:drawableStart="@drawable/ic_baseline_lock"
-        android:drawablePadding="8dp"
-        android:ems="10"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
         android:hint="@string/password"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:textColorHint="#757575"
-        app:layout_constraintEnd_toEndOf="@+id/etEmail"
-        app:layout_constraintStart_toStartOf="@+id/etEmail"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/forgot_password"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/etPassword"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/forgetPassword_bt"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/lEmail"
+        app:startIconDrawable="@drawable/ic_baseline_lock">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textColorHint="#757575"
+            tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/forgetPassword_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/forgot_password"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lPassword" />
 
     <Button
         android:id="@+id/btLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="64dp"
         android:background="@drawable/button"
         android:enabled="false"
         android:text="@string/log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/forgetPassword_bt" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:text="@string/sign_up"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        android:gravity="end"
+        android:text="@string/newAccount"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/singUp_bt"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/singUp_bt" />
+
+    <TextView
+        android:id="@+id/singUp_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/singUp"
+        android:textColor="#673AB7"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/btLogin" />
 
 
