@@ -4,22 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
-import android.content.ClipData;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Gravity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
+
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     TextView emailHeader;
     boolean disable= false;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,34 +50,31 @@ public class MainActivity extends AppCompatActivity {
         binding.drawer.addDrawerListener(toggle);
         toggle.syncState();
         //NavigationUI.setupWithNavController( binding.navView,navController);
-        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        binding.navView.setNavigationItemSelectedListener(item -> {
 //                switch (item.getItemId()){
 //                    case :
 //                }
-                return false;
-            }
+            return false;
         });
 
-        emailHeader.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_UP){
-                    if(event.getRawX()>=emailHeader.getRight()-emailHeader.getTotalPaddingRight()){
-                        if(!disable){
-                            emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up,0);
-                            nav_menu.setGroupVisible(R.id.groupDrop, true);
+        emailHeader.setOnTouchListener((v, event) -> {
 
-                        }else{
-                            emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up,0);
-                            nav_menu.setGroupVisible(R.id.groupDrop, false);
-                        }
-                        //emailHeader.setSelected(selection);
+            if(event.getAction()==MotionEvent.ACTION_DOWN){
+                if(event.getRawX()>=emailHeader.getRight()-emailHeader.getTotalPaddingRight()){
+                    if(!disable){
+                        emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up,0);
+                        nav_menu.setGroupVisible(R.id.groupDrop, true);
+                        disable=true;
+
+                    }else{
+                        emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_down,0);
+                        nav_menu.setGroupVisible(R.id.groupDrop, false);
+                        disable=false;
                     }
+                    //emailHeader.setSelected(selection);
                 }
-                return false;
             }
+            return false;
         });
 
 
