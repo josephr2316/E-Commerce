@@ -3,20 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/groupDrop">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/userFullName"
             android:icon="@drawable/ic_baseline_home"
             android:title="Home"/>
         <item
-            android:id="@+id/nav_category"
-            android:icon="@drawable/ic_baseline_category"
-            android:title="Category"/>
+            android:id="@+id/userEmail"
+            android:icon="@drawable/ic_baseline_home"
+            android:title="Home"/>
         <item
-            android:id="@+id/nav_prodcut"
-            android:icon="@drawable/ic_baseline_shopping_basket"
-            android:title="Product"/>
-    </group>
+            android:id="@+id/registerUser"
+            android:icon="@drawable/ic_baseline_home"
+            android:title="Home"/>
+
+    </group>>
+
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_home"
+                    android:icon="@drawable/ic_baseline_home"
+                    android:title="Home"/>
+                <item
+                    android:id="@+id/nav_category"
+                    android:icon="@drawable/ic_baseline_category"
+                    android:title="Category"/>
+                <item
+                    android:id="@+id/nav_prodcut"
+                    android:icon="@drawable/ic_baseline_shopping_basket"
+                    android:title="Product"/>
+            </group>
+        </menu>
+    </item>
 
     <item android:title="">
         <menu>

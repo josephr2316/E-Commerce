@@ -4,6 +4,7 @@ public class User {
 
     private String name;
     private String user;
+    public String email;
     private String password;
     private String telephoneNumber;
     private boolean isAdmin;
@@ -11,9 +12,10 @@ public class User {
     public User() {
     }
 
-    public User(String name, String user, String password, String telephoneNumber, boolean isAdmin) {
+    public User(String name, String user, String email, String password, String telephoneNumber, boolean isAdmin) {
         this.name = name;
         this.user = user;
+        this.email = email;
         this.password = password;
         this.telephoneNumber = telephoneNumber;
         this.isAdmin = isAdmin;
@@ -34,6 +36,15 @@ public class User {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     public String getPassword() {
         return password;

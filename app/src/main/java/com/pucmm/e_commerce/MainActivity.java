@@ -7,19 +7,26 @@ import androidx.core.view.GravityCompat;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.ClipData;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
+
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     ActionBarDrawerToggle toggle;
+    TextView emailHeader;
+    boolean disable= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +34,17 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View viewMain = binding.getRoot();
         setContentView(viewMain);
+        Menu nav_menu = binding.navView.getMenu();
+        //binding.navView.inflateMenu(R.menu);
+       // nav_menu.findItem(R.id.userFullName).setVisible(false);
+        //nav_menu.findItem(R.id.userEmail).setVisible(false);
+        //nav_menu.findItem(R.id.registerUser).setVisible(false);
+        //disable = false;
+        nav_menu.setGroupVisible(R.id.groupDrop,disable);
+        emailHeader = binding.navView.getHeaderView(0).findViewById(R.id.email_header);
+
+
+
 
         setSupportActionBar(binding.toolbar);
         toggle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
@@ -42,7 +60,31 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        emailHeader.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction()==MotionEvent.ACTION_UP){
+                    if(event.getRawX()>=emailHeader.getRight()-emailHeader.getTotalPaddingRight()){
+                        if(!disable){
+                            emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up,0);
+                            nav_menu.setGroupVisible(R.id.groupDrop, true);
+
+                        }else{
+                            emailHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_baseline_arrow_drop_up,0);
+                            nav_menu.setGroupVisible(R.id.groupDrop, false);
+                        }
+                        //emailHeader.setSelected(selection);
+                    }
+                }
+                return false;
+            }
+        });
+
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
