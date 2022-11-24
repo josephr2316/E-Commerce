@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce;
 
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -26,6 +27,7 @@ public class ChargeActivity extends AppCompatActivity {
                 .setDirection(Shimmer.ANIMATION_DIRECTION_LTR)
                 .setDuration(5000)
                 .setStartDelay(1000);
+        Toast.makeText(this, "Loading", Toast.LENGTH_SHORT).show();
         shimmer.start(binding.tvLoading);
 
         int time = 3000;

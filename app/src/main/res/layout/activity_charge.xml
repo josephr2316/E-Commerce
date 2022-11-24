@@ -7,15 +7,23 @@
     tools:context=".ChargeActivity">
 
     <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/tvLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/teal_700"
-        android:text="@string/loading"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/tvLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:background="@color/white"
+            android:text="@string/e_commerse"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="48sp"
+            app:layout_constraintHorizontal_bias="0.496" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"/>
+    <ImageView
+            android:layout_width="175dp"
+            android:layout_height="154dp" app:srcCompat="@drawable/ic_baseline_shopping_cart_24"
+            android:id="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
