@@ -3,15 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="200dp"
     android:padding="8dp"
-    android:background="#9C27B0">
+    android:background="#2196F3">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView3"
-        android:layout_width="139dp"
-
-        android:layout_height="105dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:padding="5dp"
+        android:background="#E91E63"
+        app:shapeAppearanceOverlay="@style/circular"
+        app:strokeColor="#E91E63"
+        app:strokeWidth="5dp"
         android:src="@drawable/ic_baseline_home"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +45,7 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:drawableRight="@drawable/ic_baseline_arrow_drop_down"
+        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

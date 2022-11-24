@@ -8,15 +8,15 @@
         <item
             android:id="@+id/userFullName"
             android:icon="@drawable/ic_baseline_home"
-            android:title="Home"/>
+            android:title=""/>
         <item
             android:id="@+id/userEmail"
             android:icon="@drawable/ic_baseline_home"
-            android:title="Home"/>
+            android:title=""/>
         <item
             android:id="@+id/registerUser"
-            android:icon="@drawable/ic_baseline_home"
-            android:title="Home"/>
+            android:icon="@drawable/ic_baseline_add"
+            android:title="Add Account"/>
 
     </group>>
 
@@ -32,7 +32,7 @@
                     android:icon="@drawable/ic_baseline_category"
                     android:title="Category"/>
                 <item
-                    android:id="@+id/nav_prodcut"
+                    android:id="@+id/nav_product"
                     android:icon="@drawable/ic_baseline_shopping_basket"
                     android:title="Product"/>
             </group>
