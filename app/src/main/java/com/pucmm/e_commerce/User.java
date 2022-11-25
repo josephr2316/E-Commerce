@@ -1,5 +1,7 @@
 package com.pucmm.e_commerce;
 
+import java.util.UUID;
+
 public class User {
 
     private String name;
@@ -9,16 +11,30 @@ public class User {
     private String telephoneNumber;
     private boolean isAdmin;
 
+    private UUID imagen;
+
     public User() {
     }
 
-    public User(String name, String user, String email, String password, String telephoneNumber, boolean isAdmin) {
+    public User(String name, String user, String email, String password, String telephoneNumber, boolean isAdmin, UUID imagen) {
         this.name = name;
         this.user = user;
         this.email = email;
         this.password = password;
         this.telephoneNumber = telephoneNumber;
         this.isAdmin = isAdmin;
+        this.imagen = imagen;
+    }
+
+    public UUID getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(UUID imagen) {
+        this.imagen = imagen;
+    }
+    public void generarImagen(){
+        this.imagen = UUID.randomUUID();
     }
 
     public String getName() {

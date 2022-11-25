@@ -20,5 +20,10 @@
     <string name="newAccount">Don\'t have an account?</string>
     <string name="singUp">Sign up</string>
     <string name="login_now">Login Now</string>
+    <string-array name="image_options">
+        <item>Take Photo</item>
+        <item>Choose from Gallery</item>
+        <item>Cancel</item>
+    </string-array>
 
 </resources>
