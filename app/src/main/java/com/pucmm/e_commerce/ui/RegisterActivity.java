@@ -1,4 +1,4 @@
-package com.pucmm.e_commerce;
+package com.pucmm.e_commerce.ui;
 
 
 
@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
@@ -24,17 +25,25 @@ import android.widget.Toast;
 
 
 import androidx.core.content.ContextCompat;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityRegisterBinding;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-
+    private  FirebaseStorage firebaseStorage;
     private User newUser;
     private AlertDialog.Builder builder;
     boolean isAdmin;
@@ -58,12 +67,10 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         View registerView = binding.getRoot();
         setContentView(registerView);
-
-
         TextWatcher();
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
         if (firebaseAuth.getCurrentUser()!=null){
             userUID = firebaseAuth.getCurrentUser().getUid();
             checkUserAccessLevel(userUID);
@@ -97,8 +104,9 @@ public class RegisterActivity extends AppCompatActivity {
             newUser.setPassword(Objects.requireNonNull(binding.passwordEdt.getText()).toString());
             newUser.setTelephoneNumber(Objects.requireNonNull(binding.phoneEdt.getText()).toString());
             newUser.setAdmin(false);
+            newUser.generarImagen();
 
-            if (newUser.getPassword().equals(binding.confirmPasswordEdt.getText().toString())){
+            if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())){
                 if (userUID!=null && isAdmin)
                 {
                     builder = new AlertDialog.Builder(this);
@@ -109,7 +117,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 createUser();
                             })
                             .setNegativeButton("No", (dialog, which) -> {
-                                newUser.setAdmin(false);
                                 createUser();
                                 dialog.cancel();
                             })
@@ -150,9 +157,31 @@ public class RegisterActivity extends AppCompatActivity {
             //Map<String,Object> name = new HashMap<>();
 
             df.set(newUser);
+            BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+            guardarImagen(newUser.getImagen().toString(), bitmap);
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
         }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this,"Failed to Create Account", Toast.LENGTH_SHORT).show());
 
+    }
+    public void guardarImagen(String id, Bitmap image){
+        String path = "images/"+id;
+        StorageReference reference = firebaseStorage.getReference().child(path);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] datos = baos.toByteArray();
+
+        UploadTask uploadTask = reference.putBytes(datos);
+        uploadTask.addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            Toast.makeText(RegisterActivity.this, "No se subio la imagen"+errorMessage, Toast.LENGTH_SHORT).show();
+        }).addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            // ...
+            Toast.makeText(RegisterActivity.this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
+        });
     }
     private void dialog(){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -225,7 +254,8 @@ public class RegisterActivity extends AppCompatActivity {
                             && !binding.emailEdit.getText().toString().isEmpty()
                             && !binding.passwordEdt.getText().toString().isEmpty()
                             && !binding.confirmPasswordEdt.getText().toString().isEmpty()
-                            && !binding.phoneEdt.getText().toString().isEmpty());
+                            && !binding.phoneEdt.getText().toString().isEmpty()
+                            && binding.passwordEdt.getText().length() > 6 );
         }
 
         @Override
@@ -251,6 +281,5 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

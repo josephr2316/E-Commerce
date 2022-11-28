@@ -1,4 +1,4 @@
-package com.pucmm.e_commerce;
+package com.pucmm.e_commerce.ui;
 
 import android.os.Bundle;
 
@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.pucmm.e_commerce.R;
 
 /**
  * A simple {@link Fragment} subclass.

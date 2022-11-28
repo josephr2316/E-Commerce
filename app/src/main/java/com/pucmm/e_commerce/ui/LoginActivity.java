@@ -1,4 +1,4 @@
-package com.pucmm.e_commerce;
+package com.pucmm.e_commerce.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
