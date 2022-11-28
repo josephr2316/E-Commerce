@@ -4,6 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,6 +24,7 @@ import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,13 +33,15 @@ import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 
 
-
-
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-    ActionBarDrawerToggle toggle;
-    TextView emailHeader;
+    private ActivityMainBinding binding;
+    private ActionBarDrawerToggle toggle;
+    private TextView emailHeader;
+    private AppBarConfiguration appBarConfiguration;
+    NavHostFragment navHostFragment;
+    NavController navController;
+
 
     boolean disable= false;
     String userUID;
@@ -98,17 +106,57 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+
         setSupportActionBar(binding.toolbar);
-        toggle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
+
+        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        navController = navHostFragment.getNavController();
+        //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout(binding.drawer)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView,navController);
+
+
+
+
+
+     /*   toggle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
         binding.drawer.addDrawerListener(toggle);
        // binding.navView.bringToFront();
-        toggle.syncState();
+        toggle.syncState();*/
+
+
         //NavigationUI.setupWithNavController( binding.navView,navController);
+
+//
         binding.navView.setNavigationItemSelectedListener(item -> {
                switch (item.getItemId()){
                    case R.id.registerUser:
                        Intent intentRegister = new Intent(this,RegisterActivity.class);
                        startActivity(intentRegister);
+                       break;
+
+                   case R.id.homeFragment:
+                       getSupportFragmentManager().beginTransaction()
+                               .replace(R.id.nav_host_fragment,new HomeFragment())
+                               .commit();
+                       binding.drawer.close();
+                       break;
+
+                   case R.id.categoryFragment:
+                       getSupportFragmentManager().beginTransaction()
+                               .replace(R.id.nav_host_fragment,new CategoryFragment())
+                               .commit();
+                       binding.drawer.close();
+                       break;
+
+                   case R.id.productFragment:
+                       getSupportFragmentManager().beginTransaction()
+                               .replace(R.id.nav_host_fragment,new ProductFragment())
+                               .commit();
+                       binding.drawer.close();
                        break;
 
                    case R.id.nav_logout:
@@ -118,9 +166,10 @@ public class MainActivity extends AppCompatActivity {
                        break;
 
 
+
                }
             return false;
-        });
+       });
 
 
 
@@ -134,6 +183,13 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         return super.onCreateOptionsMenu(menu);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     @Override

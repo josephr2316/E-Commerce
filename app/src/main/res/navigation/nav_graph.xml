@@ -10,4 +10,14 @@
         android:name="com.pucmm.e_commerce.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.pucmm.e_commerce.ProductFragment"
+        android:label="fragment_product"
+        tools:layout="@layout/fragment_product" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.pucmm.e_commerce.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" />
 </navigation>
