@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pucmm.e_commerce.CategoryFragment;
+import com.pucmm.e_commerce.ProductFragment;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 
