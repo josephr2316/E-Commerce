@@ -26,7 +26,9 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -58,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
     boolean isAdmin;
     private String userUID;
+    private String currentUserPassword;
+    private String email;
     private static final int CAMERA_PERMISSION = 0;
     private static final int GALLERY_PERMISSION = 1;
 
@@ -73,6 +77,8 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         if (firebaseAuth.getCurrentUser()!=null){
             userUID = firebaseAuth.getCurrentUser().getUid();
+            email = firebaseAuth.getCurrentUser().getEmail();
+
             checkUserAccessLevel(userUID);
         }
         else userUID = null;
@@ -107,9 +113,12 @@ public class RegisterActivity extends AppCompatActivity {
             newUser.generarImagen();
 
             if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())){
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
                 if (userUID!=null && isAdmin)
                 {
                     builder = new AlertDialog.Builder(this);
+
                     builder.setMessage("The user is an admin?")
                             .setCancelable(true)
                             .setPositiveButton("Yes", (dialog, which) -> {
@@ -121,6 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 dialog.cancel();
                             })
                             .show();
+
                 }
                 else{
                     createUser();
@@ -160,9 +170,34 @@ public class RegisterActivity extends AppCompatActivity {
             BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
             guardarImagen(newUser.getImagen().toString(), bitmap);
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            loginFirebase();
         }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this,"Failed to Create Account", Toast.LENGTH_SHORT).show());
 
+    }
+    public void loginFirebase( ){
+        //firebaseAuth.signOut();
+        firebaseAuth.signInWithEmailAndPassword(email,currentUserPassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Toast.makeText(RegisterActivity.this, email, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(RegisterActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(RegisterActivity.this, email, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(RegisterActivity.this, "Failed to loggin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+
+
+
+            }
+        });
     }
     public void guardarImagen(String id, Bitmap image){
         String path = "images/"+id;
@@ -277,6 +312,7 @@ public class RegisterActivity extends AppCompatActivity {
                     binding.loginNowTv.setVisibility(View.GONE);
                     binding.forgetPasswordTv.setVisibility(View.GONE);
                     isAdmin = true;
+                    currentUserPassword = documentSnapshot.getString("password");
                 }
             }
         });
