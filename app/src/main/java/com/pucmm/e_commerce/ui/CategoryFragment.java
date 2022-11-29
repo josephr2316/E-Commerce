@@ -8,11 +8,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
@@ -24,7 +32,10 @@ import java.util.List;
 public class CategoryFragment extends Fragment {
 
     private FragmentCategoryBinding binding;
-    private List<Category> list = new ArrayList<>();
+    private List<Category> list;
+    private FirebaseFirestore firebaseFirestore;
+    private CategoryAdapter categoryAdapter;
+
 
 
     @Override
@@ -57,7 +68,46 @@ public class CategoryFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
         binding.recyclerView.setAdapter(new CategoryAdapter(list));
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        list = new ArrayList<>();;
+        binding.recyclerView.setAdapter(new CategoryAdapter(list));
 
+
+
+    }
+    void firebaseListener(){
+        firebaseFirestore.collection("Category").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (error!= null){
+                    Log.e("FireStore error",error.getMessage());
+                }
+                for (DocumentChange documentChange : value.getDocumentChanges()){
+                    if (documentChange.getType() == DocumentChange.Type.ADDED){
+                        list.add(documentChange.getDocument().toObject(Category.class));
+
+                    }
+                    binding.recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
+
+        //Second way
+
+        firebaseFirestore.collection("Category")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot documentSnap : documentSnapshots){
+                    Category category = documentSnap.toObject(Category.class);
+                    list.add(category);
+                    binding.recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 

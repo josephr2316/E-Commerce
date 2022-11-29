@@ -41,7 +41,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryAdapter.CategoryViewHolder holder, int position) {
 
         Category category = categoryList.get(position);
-        String name;
+
+        holder.name.setText(category.getNombre());
         String image;
 
     }

@@ -153,11 +153,10 @@ public class RegisterActivity extends AppCompatActivity {
                 newUser.setAdmin(false);
                 newUser.generarImagen();
 
-            if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())){
+            if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if (userUID!=null && isAdmin)
-                {
+                if (userUID != null && isAdmin) {
                     builder = new AlertDialog.Builder(this);
 
                     builder.setMessage("The user is an admin?")
@@ -173,11 +172,13 @@ public class RegisterActivity extends AppCompatActivity {
                             .show();
 
                 }
-                else {
+            }
+            else {
                     Toast.makeText(this, "Both password have to match", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
         binding.forgetPasswordTv.setOnClickListener(view -> {
             Intent intentForgetPassword = new Intent(this,ForgetPasswordActivity.class);
@@ -190,6 +191,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
