@@ -24,13 +24,10 @@ import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.pucmm.e_commerce.CategoryFragment;
-import com.pucmm.e_commerce.ProductFragment;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 
@@ -63,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Menu nav_menu = binding.navView.getMenu();
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getCurrentUser().getUid();
+
 
         Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -113,10 +111,17 @@ public class MainActivity extends AppCompatActivity {
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
+
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
+
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.homeFragment, R.id.categoryFragment, R.id.productFragment)
                 .setOpenableLayout(binding.drawer)
                 .build();
+
+       /* appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout(binding.drawer)
+                .build();*/
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView,navController);
 
@@ -141,23 +146,18 @@ public class MainActivity extends AppCompatActivity {
                        break;
 
                    case R.id.homeFragment:
-                       getSupportFragmentManager().beginTransaction()
-                               .replace(R.id.nav_host_fragment,new HomeFragment())
-                               .commit();
+                       navController.navigate(R.id.homeFragment);
                        binding.drawer.close();
+
                        break;
 
                    case R.id.categoryFragment:
-                       getSupportFragmentManager().beginTransaction()
-                               .replace(R.id.nav_host_fragment,new CategoryFragment())
-                               .commit();
+                       navController.navigate(R.id.categoryFragment);
                        binding.drawer.close();
                        break;
 
                    case R.id.productFragment:
-                       getSupportFragmentManager().beginTransaction()
-                               .replace(R.id.nav_host_fragment,new ProductFragment())
-                               .commit();
+                       navController.navigate(R.id.productFragment);
                        binding.drawer.close();
                        break;
 
