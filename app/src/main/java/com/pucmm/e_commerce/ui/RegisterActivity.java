@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -40,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firestore.v1.WriteResult;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityRegisterBinding;
@@ -64,7 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
     private String email;
     private static final int CAMERA_PERMISSION = 0;
     private static final int GALLERY_PERMISSION = 1;
+    private User user;
 
+    // Se debe buscar nombre, descripcion (Productos y categorias).
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,13 +79,36 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
+
         if (firebaseAuth.getCurrentUser()!=null){
             userUID = firebaseAuth.getCurrentUser().getUid();
             email = firebaseAuth.getCurrentUser().getEmail();
 
             checkUserAccessLevel(userUID);
+            Bundle intent = getIntent().getExtras();
+            if (intent.getInt("vista") == 1) {
+                DocumentReference docRef = firebaseFirestore.collection("Users").document(userUID);
+                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Log.d("TAG","onSuccess: "+ documentSnapshot.getData());
+                        user = documentSnapshot.toObject(User.class);
+                        binding.textView3.setText("Actualizar");
+                        binding.nameEdt.setText(user.getName());
+                        binding.userEdt.setText(user.getUser());
+                        binding.emailEdit.setText(user.getEmail());
+                        binding.passwordEdt.setText(user.getPassword());
+                        binding.confirmPasswordEdt.setText(user.getPassword());
+                        binding.phoneEdt.setText(user.getTelephoneNumber());
+                        downloadAndSetImage(user.getImagen());
+                        binding.registerBt.setText("Update");
+                    }
+                });
+            }
         }
-        else userUID = null;
+        else{
+            userUID = null;
+        }
 
         binding.imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,15 +129,29 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         binding.registerBt.setOnClickListener(view ->{
+            Bundle intent = getIntent().getExtras();
+            if (intent.getInt("vista") == 1) {
+                DocumentReference docRef = firebaseFirestore.collection("Users").document(userUID);
+//                docRef.update( "email", user.getEmail(), "imagen", user.getImagen(), "name", user.getName(), "password", user.getPassword(), "telephoneNumber", user.getTelephoneNumber(), "user", user.getUser());
+                BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                guardarImagen(user.getImagen(), bitmap);
+                docRef.update("name", binding.nameEdt.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                     @Override
+                     public void onSuccess(Void unused) {
 
-            newUser = new User();
-            newUser.setName(Objects.requireNonNull(binding.nameEdt.getText()).toString());
-            newUser.setUser(Objects.requireNonNull(binding.userEdt.getText()).toString());
-            newUser.setEmail(Objects.requireNonNull(binding.emailEdit.getText()).toString());
-            newUser.setPassword(Objects.requireNonNull(binding.passwordEdt.getText()).toString());
-            newUser.setTelephoneNumber(Objects.requireNonNull(binding.phoneEdt.getText()).toString());
-            newUser.setAdmin(false);
-            newUser.generarImagen();
+                     }
+                 });
+                Toast.makeText(this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
+            }else{
+                newUser = new User();
+                newUser.setName(Objects.requireNonNull(binding.nameEdt.getText()).toString());
+                newUser.setUser(Objects.requireNonNull(binding.userEdt.getText()).toString());
+                newUser.setEmail(Objects.requireNonNull(binding.emailEdit.getText()).toString());
+                newUser.setPassword(Objects.requireNonNull(binding.passwordEdt.getText()).toString());
+                newUser.setTelephoneNumber(Objects.requireNonNull(binding.phoneEdt.getText()).toString());
+                newUser.setAdmin(false);
+                newUser.generarImagen();
 
             if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())){
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -132,22 +173,19 @@ public class RegisterActivity extends AppCompatActivity {
                             .show();
 
                 }
-                else{
-                    createUser();
+                else {
+                    Toast.makeText(this, "Both password have to match", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else {
-                Toast.makeText(this, "Both password have to match", Toast.LENGTH_SHORT).show();
             }
         });
 
         binding.forgetPasswordTv.setOnClickListener(view -> {
-            Intent intent = new Intent(this,ForgetPasswordActivity.class);
-            startActivity(intent);
+            Intent intentForgetPassword = new Intent(this,ForgetPasswordActivity.class);
+            startActivity(intentForgetPassword);
         });
         binding.loginNowTv.setOnClickListener(view -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            Intent intentLoginActivity = new Intent(this, LoginActivity.class);
+            startActivity(intentLoginActivity);
 
         });
 
@@ -172,7 +210,6 @@ public class RegisterActivity extends AppCompatActivity {
             guardarImagen(newUser.getImagen().toString(), bitmap);
             loginFirebase();
         }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this,"Failed to Create Account", Toast.LENGTH_SHORT).show());
-
     }
     public void loginFirebase( ){
         //firebaseAuth.signOut();
@@ -241,6 +278,23 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
         builder1.show();
+    }
+    private void downloadAndSetImage(String nombreImagen){
+        StorageReference reference = firebaseStorage.getReference().child("images/"+nombreImagen);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                binding.imageView2.setImageBitmap(Bitmap.createScaledBitmap(bmp, binding.imageView2.getWidth(), binding.imageView2.getHeight(), false));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
