@@ -1,8 +1,12 @@
 package com.pucmm.e_commerce.database;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
 
     private String name;
     private String user;
@@ -84,5 +88,9 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+    public void castFirebaseUser(FirebaseUser firebaseUser){
+        this.name = firebaseUser.getDisplayName();
+
     }
 }

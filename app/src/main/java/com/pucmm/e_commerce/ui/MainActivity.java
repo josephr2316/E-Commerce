@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
     NavController navController;
 
 
-    boolean disable= false;
+    private boolean disable;
     String userUID;
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
     MenuItem itemRegister;
     boolean isAdmin;
 
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+        disable= false;
         firebaseFirestore = FirebaseFirestore.getInstance();
         itemRegister = nav_menu.findItem(R.id.registerUser);
         checkUserAccessLevel(userUID);
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                switch (item.getItemId()){
                    case R.id.registerUser:
                        Intent intentRegister = new Intent(this,RegisterActivity.class);
+                       intentRegister.putExtra("vista", 0);
                        startActivity(intentRegister);
                        break;
 
@@ -166,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                        Intent intent = new Intent(this,LoginActivity.class);
                        startActivity(intent);
                        break;
+                   case R.id.nav_profile:
+                        Intent intentProfile = new Intent(this,RegisterActivity.class);
+                        intentProfile.putExtra("vista", 1);
+                        startActivity(intentProfile);
+                        break;
 
 
 

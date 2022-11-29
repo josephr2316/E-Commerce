@@ -19,8 +19,8 @@ import com.pucmm.e_commerce.databinding.ActivityLoginBinding;
 public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding binding;
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         binding.singUpBt.setOnClickListener(viewNew -> {
             Intent intent = new Intent(this, RegisterActivity.class);
+            intent.putExtra("vista", 0);
             startActivity(intent);
         });
 
