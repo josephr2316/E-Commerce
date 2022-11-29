@@ -298,11 +298,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
     };
+
     void checkUserAccessLevel(String uid){
 
 
         DocumentReference df = firebaseFirestore.collection("Users").document(uid);
-        int count;
+
         df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
