@@ -1,5 +1,8 @@
 package com.pucmm.e_commerce.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 
 
@@ -38,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private TextView emailHeader;
     private AppBarConfiguration appBarConfiguration;
+
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseStorage firebaseStorage;
     NavHostFragment navHostFragment;
     NavController navController;
 
@@ -45,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean disable;
     String userUID;
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
     MenuItem itemRegister;
     boolean isAdmin;
 
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
         disable= false;
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
         itemRegister = nav_menu.findItem(R.id.registerUser);
         checkUserAccessLevel(userUID);
 
@@ -80,6 +90,21 @@ public class MainActivity extends AppCompatActivity {
         //nav_menu.findItem(R.id.registerUser).setVisible(false);
         //disable = false;
 
+        if(firebaseAuth.getCurrentUser()!=null){
+            DocumentReference docRef = firebaseFirestore.collection("Users").document(userUID);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User user = documentSnapshot.toObject(User.class);
+                    TextView textView2 = binding.navView.getHeaderView(0).findViewById(R.id.textView2);
+                    TextView email = binding.navView.getHeaderView(0).findViewById(R.id.email_header);
+                    textView2.setText(user.getName());
+                    email.setText(user.getEmail());
+                    downloadAndSetImage(user.getImagen());
+
+                }
+            });
+        }
         nav_menu.setGroupVisible(R.id.groupDrop,disable);
 
         emailHeader = binding.navView.getHeaderView(0).findViewById(R.id.email_header);
@@ -184,7 +209,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    private void downloadAndSetImage(String nombreImagen){
+        StorageReference reference = firebaseStorage.getReference().child("images/"+nombreImagen);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ImageView imageView = binding.navView.getHeaderView(0).findViewById(R.id.imageView3);
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(), imageView.getHeight(), false));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
 
 
     @Override

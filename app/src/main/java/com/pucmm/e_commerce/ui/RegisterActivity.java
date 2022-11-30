@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Patterns;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -136,14 +137,14 @@ public class RegisterActivity extends AppCompatActivity {
                 BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
                 Bitmap bitmap = drawable.getBitmap();
                 guardarImagen(user.getImagen(), bitmap);
-                docRef.update("name", binding.nameEdt.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                docRef.update( "email", binding.emailEdit.getText().toString(), "imagen", user.getImagen(), "name", binding.nameEdt.getText().toString(), "password", binding.passwordEdt.getText().toString(), "telephoneNumber", binding.phoneEdt.getText().toString(), "user", binding.userEdt.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                      @Override
                      public void onSuccess(Void unused) {
-
+                        Log.i("prueba", "SE EDITO");
                      }
                  });
                 Toast.makeText(this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
-            }else{
+            }else {
                 newUser = new User();
                 newUser.setName(Objects.requireNonNull(binding.nameEdt.getText()).toString());
                 newUser.setUser(Objects.requireNonNull(binding.userEdt.getText()).toString());
@@ -153,32 +154,30 @@ public class RegisterActivity extends AppCompatActivity {
                 newUser.setAdmin(false);
                 newUser.generarImagen();
 
-            if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (newUser.getPassword().equals(Objects.requireNonNull(binding.confirmPasswordEdt.getText()).toString())) {
+                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if (userUID != null && isAdmin) {
-                    builder = new AlertDialog.Builder(this);
+                    if (userUID != null && isAdmin) {
+                        builder = new AlertDialog.Builder(this);
 
-                    builder.setMessage("The user is an admin?")
-                            .setCancelable(true)
-                            .setPositiveButton("Yes", (dialog, which) -> {
-                                newUser.setAdmin(true);
-                                createUser();
-                            })
-                            .setNegativeButton("No", (dialog, which) -> {
-                                createUser();
-                                dialog.cancel();
-                            })
-                            .show();
+                        builder.setMessage("The user is an admin?")
+                                .setCancelable(true)
+                                .setPositiveButton("Yes", (dialog, which) -> {
+                                    newUser.setAdmin(true);
+                                    createUser();
+                                })
+                                .setNegativeButton("No", (dialog, which) -> {
+                                    createUser();
+                                    dialog.cancel();
+                                })
+                                .show();
 
-                }
-            }
-            else {
-                    Toast.makeText(this, "Both password have to match", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Both password have to match", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
-
 
         binding.forgetPasswordTv.setOnClickListener(view -> {
             Intent intentForgetPassword = new Intent(this,ForgetPasswordActivity.class);
@@ -191,7 +190,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -340,13 +338,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            binding.registerBt.setEnabled(!binding.nameEdt.getText().toString().isEmpty()
-                            && !binding.userEdt.getText().toString().isEmpty()
-                            && !binding.emailEdit.getText().toString().isEmpty()
-                            && !binding.passwordEdt.getText().toString().isEmpty()
-                            && !binding.confirmPasswordEdt.getText().toString().isEmpty()
-                            && !binding.phoneEdt.getText().toString().isEmpty()
-                            && binding.passwordEdt.getText().length() > 6 );
+            if(binding.confirmPasswordEdt.getText().toString().equals(binding.passwordEdt.getText().toString())){
+                binding.registerBt.setEnabled(!binding.nameEdt.getText().toString().isEmpty()
+                                && !binding.userEdt.getText().toString().isEmpty()
+                                && !binding.emailEdit.getText().toString().isEmpty()
+                                && !binding.passwordEdt.getText().toString().isEmpty()
+                                && !binding.confirmPasswordEdt.getText().toString().isEmpty()
+                                && !binding.phoneEdt.getText().toString().isEmpty()
+                                && binding.passwordEdt.getText().length() > 6);
+                binding.confirmPasswordLayout.setError("");
+                binding.confirmPasswordLayout.setErrorEnabled(false);
+            }
+            else{
+                binding.confirmPasswordLayout.setErrorEnabled(true);
+                binding.confirmPasswordLayout.setError("Claves no coinciden");
+                binding.registerBt.setEnabled(false);
+            }
         }
 
         @Override
