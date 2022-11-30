@@ -34,6 +34,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseStorage firebaseStorage;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                                     resetUserPassword(email);
                                 }
 
-
                             }
                         }
 
@@ -95,7 +95,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
     public void resetUserPassword(String email){
         firebaseAuth = FirebaseAuth.getInstance();
-        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("verifying..");
         progressDialog.show();
 
@@ -106,14 +106,13 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "Reset password instructions has sent to your email",
                                     Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Error, este correo no existe", Toast.LENGTH_SHORT).show();
                     }
                 });
 
