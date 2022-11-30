@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
@@ -25,6 +27,7 @@ import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
 import com.pucmm.e_commerce.databinding.FragmentProductBinding;
+import com.pucmm.e_commerce.models.CategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class CategoryFragment extends Fragment {
     private List<Category> list;
     private FirebaseFirestore firebaseFirestore;
     private CategoryAdapter categoryAdapter;
+    private CategoryViewModel categoryViewModel;
 
 
 
@@ -66,11 +70,21 @@ public class CategoryFragment extends Fragment {
         }
         //recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
-        binding.recyclerView.setAdapter(new CategoryAdapter(list));
+        categoryAdapter = new CategoryAdapter();
+
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         list = new ArrayList<>();;
-        binding.recyclerView.setAdapter(new CategoryAdapter(list));
+
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        categoryViewModel.init(getContext());
+        categoryViewModel.getLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Category>>() {
+            @Override
+            public void onChanged(ArrayList<Category> categories) {
+                categoryAdapter.setCategoryList(categories);
+            }
+        });
+        binding.recyclerView.setAdapter(categoryAdapter);
 
 
 

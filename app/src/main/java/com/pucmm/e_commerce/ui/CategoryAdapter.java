@@ -19,13 +19,19 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private final List<Category> categoryList;
+    private  List<Category> categoryList;
     private Context context;
 
 
 
-    public CategoryAdapter(List<Category> list) {this.categoryList = list;}
+   // public CategoryAdapter(List<Category> list) {this.categoryList = list;}
+    public CategoryAdapter( ){}
 
+
+    public void setCategoryList (List<Category> categoryList){
+        this.categoryList = categoryList;
+        notifyDataSetChanged();;
+    }
 
     @NonNull
     @Override
