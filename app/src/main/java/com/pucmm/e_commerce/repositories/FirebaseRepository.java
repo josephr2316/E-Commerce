@@ -1,9 +1,9 @@
 package com.pucmm.e_commerce.repositories;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -12,9 +12,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pucmm.e_commerce.database.Category;
+import com.pucmm.e_commerce.database.Product;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FirebaseRepository {
 
@@ -26,36 +29,42 @@ public class FirebaseRepository {
     private ArrayList<Category> arrayList = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private static final String TAG = "FirebaseRepository";
+    public  MutableLiveData<ArrayList<Category>> data;
 
-
-    public static FirebaseRepository getInstance(Context context) {
+    public MutableLiveData<ArrayList<Category>> getList(){
+        if(data==null){
+            data =new MutableLiveData<ArrayList<Category>>();
+            getCategory();
+        }
+        return data;
+    }
+    public static FirebaseRepository getInstance() {
         if (instance == null){
             instance = new FirebaseRepository();
         }
         return instance;
     }
 
-    public MutableLiveData<ArrayList<Category>> getCategory(){
+    public void getCategory(){
         loadCategory();
-        MutableLiveData<ArrayList<Category>> data = new MutableLiveData<>();
-        data.setValue(arrayList);
-        return data;
+
     }
     private void loadCategory(){
-        firebaseFirestore.collection("Category")
+        firebaseFirestore.collection("Categories")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()){
-                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()){
+                        List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
 
-                    for (DocumentSnapshot documentSnapshot : list){
-                        arrayList.add(documentSnapshot.toObject(Category.class));
+                        ArrayList<Category> productArrayList = new ArrayList<>();
+                        for (DocumentSnapshot documentSnapshot : list){
+                            Log.e(TAG, "ESTA ENTRANDO" );
+                            productArrayList.add(documentSnapshot.toObject(Category.class));
+                            arrayList.add(documentSnapshot.toObject(Category.class));
+                        }
+                        data.setValue(arrayList);
                     }
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG,"onFailure",e);

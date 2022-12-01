@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce.database;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,9 +8,9 @@ public class Category {
     private String nombre;
     private String imagen;
 
-    private List<Product> productList;
+    private ArrayList<Product> productList;
     public Category(){
-
+        this.productList = new ArrayList<>();
     }
     public Category(String nombre, String imagen) {
         this.nombre = nombre;
@@ -26,6 +27,17 @@ public class Category {
 
     public String getImagen() {
         return imagen;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(ArrayList<Product> productList) {
+        this.productList = productList;
+    }
+    public void addProduct(Product product) {
+        this.productList.add(product);
     }
 
     public void setImagen(String imagen) {
