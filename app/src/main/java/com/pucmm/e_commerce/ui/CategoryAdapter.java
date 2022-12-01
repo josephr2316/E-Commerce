@@ -1,6 +1,7 @@
 package com.pucmm.e_commerce.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public void setCategoryList (List<Category> categoryList){
         this.categoryList = categoryList;
-        notifyDataSetChanged();;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -48,7 +49,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         Category category = categoryList.get(position);
 
-        holder.name.setText(category.getNombre());
+        Log.i("ENTRAR", category.getNombre());
+        holder.name.setText(category.getNombre().toString());
         String image;
 
     }
@@ -62,11 +64,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public static class  CategoryViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
-        private EditText name;
+        private TextView name;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.category_iv);
-            name = itemView.findViewById(R.id.setting_bt);
+            name = itemView.findViewById(R.id.categoryName_tv);
         }
     }
 

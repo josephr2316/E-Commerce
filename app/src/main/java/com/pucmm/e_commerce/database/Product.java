@@ -1,18 +1,20 @@
 package com.pucmm.e_commerce.database;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Product {
     private String codigo;
     private String descripcion;
-    private List<ProductImage> productImages;
+    private ArrayList<ProductImage> productImages;
     private Integer precio;
     public Product(){
 
     }
 
-    public Product(String codigo, String descripcion, List<ProductImage> productImages, Integer precio) {
+    public Product(String codigo, String descripcion, ArrayList<ProductImage> productImages, Integer precio) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.productImages = productImages;
@@ -35,11 +37,11 @@ public class Product {
         this.descripcion = descripcion;
     }
 
-    public List<ProductImage> getProductImages() {
+    public ArrayList<ProductImage> getProductImages() {
         return productImages;
     }
 
-    public void setProductImages(List<ProductImage> productImages) {
+    public void setProductImages(ArrayList<ProductImage> productImages) {
         this.productImages = productImages;
     }
 

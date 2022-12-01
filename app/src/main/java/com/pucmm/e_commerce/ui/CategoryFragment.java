@@ -3,6 +3,7 @@ package com.pucmm.e_commerce.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,19 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
-import com.pucmm.e_commerce.databinding.FragmentProductBinding;
 import com.pucmm.e_commerce.models.CategoryViewModel;
+import com.pucmm.e_commerce.repositories.FirebaseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CategoryFragment extends Fragment {
     private FragmentCategoryBinding binding;
     private List<Category> list;
     private FirebaseFirestore firebaseFirestore;
-    private CategoryAdapter categoryAdapter;
+    public CategoryAdapter categoryAdapter;
     private CategoryViewModel categoryViewModel;
 
 
@@ -53,7 +53,6 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater,container,false);
         View viewCategory = binding.getRoot();
-
         return viewCategory;
     }
 
@@ -74,25 +73,25 @@ public class CategoryFragment extends Fragment {
 
 
         firebaseFirestore = FirebaseFirestore.getInstance();
-        list = new ArrayList<>();;
+        list = new ArrayList<>();
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        categoryViewModel.init(getContext());
+        categoryViewModel.init();
         categoryViewModel.getLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
-                Log.i("mencion2",categories.get(0).getNombre());
+                Log.i("VALOR", String.valueOf(categories.size()));
                 categoryAdapter.setCategoryList(categories);
-
+                firebaseListener();
+                binding.recyclerView.setAdapter(categoryAdapter);
             }
         });
-        binding.recyclerView.setAdapter(categoryAdapter);
 
 
 
     }
     void firebaseListener(){
-        firebaseFirestore.collection("Category").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Categories").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
@@ -111,7 +110,7 @@ public class CategoryFragment extends Fragment {
 
         //Second way
 
-        firebaseFirestore.collection("Category")
+        firebaseFirestore.collection("Categories")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override

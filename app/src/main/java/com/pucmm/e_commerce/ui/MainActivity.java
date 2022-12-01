@@ -30,16 +30,21 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
-import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
+
+import java.io.ByteArrayOutputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private boolean disable;
-    String userUID;
+    private String userUID;
     private FirebaseAuth firebaseAuth;
     MenuItem itemRegister;
     boolean isAdmin;
@@ -80,6 +85,27 @@ public class MainActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         itemRegister = nav_menu.findItem(R.id.registerUser);
         checkUserAccessLevel(userUID);
+
+        binding.floatingActionButton.setOnClickListener(view -> {
+            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+            if(navHostFragment!=null){
+                if(currentFragment instanceof CategoryFragment){
+                    if(userUID!=null){
+                        CollectionReference collectionReference = firebaseFirestore.collection("Categories");
+                        Category category = new Category();
+                        category.setNombre("aaaa");
+                        category.generarImagen();
+                        Product product = new Product();
+                        product.generarCodigo();
+                        product.setPrecio(2);
+                        product.setDescripcion("Estoy probando");
+                        category.addProduct(product);
+                        collectionReference.add(category);
+
+                    }
+                }
+            }
+        });
 
 
         //toas
@@ -208,19 +234,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
        });
 
-        binding.floatingActionButton.setOnClickListener(view -> {
-            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-            if (navHostFragment != null){
-                if (currentFragment instanceof HomeFragment)
-                    Toast.makeText(this,"Home fragment",Toast.LENGTH_SHORT).show();
-                if (currentFragment instanceof  CategoryFragment)
-                    Toast.makeText(this,"Category fragment",Toast.LENGTH_SHORT).show();
-                if (currentFragment instanceof  ProductFragment)
-                    Toast.makeText(this,"Category fragment",Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
 
 
 
@@ -243,7 +256,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+//    private void guardarImagenCategory(String id){
+//        String path = "images/"+id;
+//        StorageReference reference = firebaseStorage.getReference().child(path);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] datos = baos.toByteArray();
+//
+//        UploadTask uploadTask = reference.putBytes(datos);
+//        uploadTask.addOnFailureListener(exception -> {
+//            // Handle unsuccessful uploads
+//            int errorCode = ((StorageException) exception).getErrorCode();
+//            String errorMessage = exception.getMessage();
+//            Toast.makeText(MainActivity.this, "No se subio la imagen"+errorMessage, Toast.LENGTH_SHORT).show();
+//        }).addOnSuccessListener(taskSnapshot -> {
+//            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//            // ...
+//            Toast.makeText(MainActivity.this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
+//        });
+//    }
+    private void crearCategoria(){
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
