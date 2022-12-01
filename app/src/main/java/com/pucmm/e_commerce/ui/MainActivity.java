@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -35,8 +36,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
+import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -204,6 +207,19 @@ public class MainActivity extends AppCompatActivity {
                }
             return false;
        });
+
+        binding.floatingActionButton.setOnClickListener(view -> {
+            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+            if (navHostFragment != null){
+                if (currentFragment instanceof HomeFragment)
+                    Toast.makeText(this,"Home fragment",Toast.LENGTH_SHORT).show();
+                if (currentFragment instanceof  CategoryFragment)
+                    Toast.makeText(this,"Category fragment",Toast.LENGTH_SHORT).show();
+                if (currentFragment instanceof  ProductFragment)
+                    Toast.makeText(this,"Category fragment",Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
 
 

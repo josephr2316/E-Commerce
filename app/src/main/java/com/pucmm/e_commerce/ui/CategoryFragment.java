@@ -81,7 +81,9 @@ public class CategoryFragment extends Fragment {
         categoryViewModel.getLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
+                Log.i("mencion2",categories.get(0).getNombre());
                 categoryAdapter.setCategoryList(categories);
+
             }
         });
         binding.recyclerView.setAdapter(categoryAdapter);
