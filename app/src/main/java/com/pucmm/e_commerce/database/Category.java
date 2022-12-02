@@ -16,6 +16,10 @@ public class Category {
         this.nombre = nombre;
         this.imagen = imagen;
     }
+    public Category(String nombre){
+        this.nombre = nombre;
+        this.imagen = UUID.randomUUID().toString();
+    }
 
     public String getNombre() {
         return nombre;

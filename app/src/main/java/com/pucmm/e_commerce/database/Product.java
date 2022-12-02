@@ -20,7 +20,18 @@ public class Product {
         this.productImages = productImages;
         this.precio = precio;
     }
+    public Product(String descripcion, ArrayList<ProductImage> productImages, Integer precio) {
+        this.codigo = UUID.randomUUID().toString();
+        this.descripcion = descripcion;
+        this.productImages = productImages;
+        this.precio = precio;
+    }
 
+    public Product(String descripcion, Integer precio) {
+        this.codigo = UUID.randomUUID().toString();
+        this.descripcion = descripcion;
+        this.precio = precio;
+    }
     public String getCodigo() {
         return codigo;
     }

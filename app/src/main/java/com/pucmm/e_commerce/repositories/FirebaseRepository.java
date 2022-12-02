@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,6 +46,11 @@ public class FirebaseRepository {
         return instance;
     }
 
+    public void addCategory(Category category ){
+        arrayList.add(category);
+        CollectionReference collectionReference = firebaseFirestore.collection("Categories");
+        collectionReference.add(category);
+    }
     public void getCategory(){
         loadCategory();
 

@@ -43,6 +43,7 @@ import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
+import com.pucmm.e_commerce.repositories.FirebaseRepository;
 
 import java.io.ByteArrayOutputStream;
 
@@ -91,17 +92,8 @@ public class MainActivity extends AppCompatActivity {
             if(navHostFragment!=null){
                 if(currentFragment instanceof CategoryFragment){
                     if(userUID!=null){
-                        CollectionReference collectionReference = firebaseFirestore.collection("Categories");
-                        Category category = new Category();
-                        category.setNombre("aaaa");
-                        category.generarImagen();
-                        Product product = new Product();
-                        product.generarCodigo();
-                        product.setPrecio(2);
-                        product.setDescripcion("Estoy probando");
-                        category.addProduct(product);
-                        collectionReference.add(category);
-
+                        Category category = new Category("Pruebaaaa");
+                        FirebaseRepository.getInstance().addCategory(category);
                     }
                 }
             }
