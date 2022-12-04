@@ -98,11 +98,7 @@ public class FirebaseRepository {
                 });
         arrayList.remove(category);
     }
-    public void addCategory(Category category ){
-        arrayList.add(category);
-        CollectionReference collectionReference = firebaseFirestore.collection("Categories");
-        collectionReference.add(category);
-    }
+
 
     public void getCategory(){
         loadCategory();
