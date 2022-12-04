@@ -133,7 +133,6 @@
         app:endIconMode="password_toggle"
         app:layout_constraintBottom_toTopOf="@+id/confirmPassword_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:counterEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_layout">
 

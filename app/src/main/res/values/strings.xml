@@ -31,5 +31,10 @@
     <string name="price">Price</string>
     <string name="description">Description</string>
     <string name="add">ADD</string>
+    <string-array name="category_options">
+        <item>Editar categoria</item>
+        <item>Borrar categoria</item>
+        <item>Cancel</item>
+    </string-array>
 
 </resources>

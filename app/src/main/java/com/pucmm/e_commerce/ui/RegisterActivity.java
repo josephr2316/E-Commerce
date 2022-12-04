@@ -46,6 +46,7 @@ import com.google.firestore.v1.WriteResult;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityRegisterBinding;
+import com.pucmm.e_commerce.repositories.FirebaseRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -136,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                docRef.update( "email", user.getEmail(), "imagen", user.getImagen(), "name", user.getName(), "password", user.getPassword(), "telephoneNumber", user.getTelephoneNumber(), "user", user.getUser());
                 BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
                 Bitmap bitmap = drawable.getBitmap();
-                guardarImagen(user.getImagen(), bitmap);
+                FirebaseRepository.getInstance().guardarImagen(user.getImagen(), bitmap);
                 docRef.update( "email", binding.emailEdit.getText().toString(), "imagen", user.getImagen(), "name", binding.nameEdt.getText().toString(), "password", binding.passwordEdt.getText().toString(), "telephoneNumber", binding.phoneEdt.getText().toString(), "user", binding.userEdt.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                      @Override
                      public void onSuccess(Void unused) {
@@ -207,7 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
             df.set(newUser);
             BitmapDrawable drawable = (BitmapDrawable) binding.imageView2.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
-            guardarImagen(newUser.getImagen().toString(), bitmap);
+            FirebaseRepository.getInstance().guardarImagen(newUser.getImagen().toString(), bitmap);
             loginFirebase();
         }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this,"Failed to Create Account", Toast.LENGTH_SHORT).show());
     }
@@ -234,25 +235,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             }
-        });
-    }
-    public void guardarImagen(String id, Bitmap image){
-        String path = "images/"+id;
-        StorageReference reference = firebaseStorage.getReference().child(path);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] datos = baos.toByteArray();
-
-        UploadTask uploadTask = reference.putBytes(datos);
-        uploadTask.addOnFailureListener(exception -> {
-            // Handle unsuccessful uploads
-            int errorCode = ((StorageException) exception).getErrorCode();
-            String errorMessage = exception.getMessage();
-            Toast.makeText(RegisterActivity.this, "No se subio la imagen"+errorMessage, Toast.LENGTH_SHORT).show();
-        }).addOnSuccessListener(taskSnapshot -> {
-            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-            // ...
-            Toast.makeText(RegisterActivity.this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
         });
     }
     private void dialog(){
@@ -326,6 +308,28 @@ public class RegisterActivity extends AppCompatActivity {
         binding.userEdt.addTextChangedListener(textWatcher);
         binding.emailEdit.addTextChangedListener(textWatcher);
         binding.passwordEdt.addTextChangedListener(textWatcher);
+        binding.passwordEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (binding.passwordEdt.getText().length() < 6) {
+                    binding.passwordLayout.setErrorEnabled(true);
+                    binding.passwordLayout.setError("Debe ser mayor de 6 digitos");
+                }else{
+                    binding.passwordLayout.setError("");
+                    binding.passwordLayout.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         binding.confirmPasswordEdt.addTextChangedListener(textWatcher);
         binding.phoneEdt.addTextChangedListener(textWatcher);
     }
@@ -363,8 +367,6 @@ public class RegisterActivity extends AppCompatActivity {
     };
 
     void checkUserAccessLevel(String uid){
-
-
         DocumentReference df = firebaseFirestore.collection("Users").document(uid);
 
         df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

@@ -80,7 +80,7 @@ public class CategoryFragment extends Fragment {
             public void onChanged(ArrayList<Category> categories) {
                 Log.i("VALOR", String.valueOf(categories.size()));
                 categoryAdapter.setCategoryList(categories);
-                //firebaseListener();
+//                firebaseListener();
                 binding.recyclerView.setAdapter(categoryAdapter);
 
 
