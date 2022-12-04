@@ -30,10 +30,14 @@
         android:id="@+id/categoryFragment"
         android:name="com.pucmm.e_commerce.ui.CategoryFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_category" />
-    <fragment
-        android:id="@+id/registerProductFragment"
-        android:name="com.pucmm.e_commerce.ui.RegisterProductFragment"
-        android:label="fragment_register_product"
-        tools:layout="@layout/fragment_register_product" />
+        tools:layout="@layout/fragment_category" >
+        <action android:id="@+id/action_categoryFragment_to_registerCategoryFragment"
+                app:destination="@id/registerCategoryFragment"/>
+    </fragment>
+    <fragment android:id="@+id/registerCategoryFragment"
+              android:name="com.pucmm.e_commerce.ui.RegisterCategoryFragment"
+              android:label="Gestion de Categoria"
+              tools:layout="@layout/fragment_register_category">
+        <argument android:name="category" app:argType="com.pucmm.e_commerce.database.Category"/>
+    </fragment>
 </navigation>

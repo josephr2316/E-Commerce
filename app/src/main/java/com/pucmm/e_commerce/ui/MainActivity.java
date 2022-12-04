@@ -8,8 +8,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -98,19 +97,16 @@ public class MainActivity extends AppCompatActivity {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
             if(navHostFragment!=null){
                 if(currentFragment instanceof CategoryFragment){
-                    if(userUID!=null){
-                        CollectionReference collectionReference = firebaseFirestore.collection("Categories");
-                        Category category = new Category();
-                        category.setNombre("aaaa");
-                        category.generarImagen();
-                        Product product = new Product();
-                        product.generarCodigo();
-                        product.setPrecio(2);
-                        product.setDescripcion("Estoy probando");
-                        category.addProduct(product);
-                        collectionReference.add(category);
-
-                    }
+//                    if(userUID!=null && isAdmin){
+//                        Category category = new Category("Pruebaaaa");
+//                        FirebaseRepository.getInstance().addCategory(category);
+//                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("category", null);
+                    navController.navigate(R.id.registerCategoryFragment);
+                    //Fragment to fragment
+//                    NavHostFragment.findNavController(RegisterCategoryFragment.this)
+//                            .navigate(R.id);
                 }
                 else{
                     if(currentFragment instanceof ProductFragment)
@@ -119,11 +115,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //toas
         //Toast.makeText(this,firebaseAuth.getUid(),Toast.LENGTH_SHORT).show();
-
-
 
         //binding.navView.inflateMenu(R.menu);
        // nav_menu.findItem(R.id.userFullName).setVisible(false);
@@ -192,18 +185,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView,navController);
 
-
-
-
-
      /*   toggle = new ActionBarDrawerToggle(this, binding.drawer,binding.toolbar, R.string.open,R.string.close);
         binding.drawer.addDrawerListener(toggle);
        // binding.navView.bringToFront();
         toggle.syncState();*/
 
-
         //NavigationUI.setupWithNavController( binding.navView,navController);
-
 //
         binding.navView.setNavigationItemSelectedListener(item -> {
                switch (item.getItemId()){
@@ -239,16 +226,9 @@ public class MainActivity extends AppCompatActivity {
                         intentProfile.putExtra("vista", 1);
                         startActivity(intentProfile);
                         break;
-
-
-
                }
             return false;
        });
-
-
-
-
     }
     private void downloadAndSetImage(String nombreImagen){
         StorageReference reference = firebaseStorage.getReference().child("images/"+nombreImagen);
@@ -260,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 ImageView imageView = binding.navView.getHeaderView(0).findViewById(R.id.imageView3);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(), imageView.getHeight(), false));
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -274,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 //        byte[] datos = baos.toByteArray();
-//
 //        UploadTask uploadTask = reference.putBytes(datos);
 //        uploadTask.addOnFailureListener(exception -> {
 //            // Handle unsuccessful uploads
@@ -287,10 +267,6 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(MainActivity.this, "Subido correctamente!", Toast.LENGTH_SHORT).show();
 //        });
 //    }
-    private void crearCategoria(){
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
@@ -322,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUserAccessLevel(String uid){
-        
         DocumentReference df = firebaseFirestore.collection("Users").document(uid);
         df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -331,8 +306,8 @@ public class MainActivity extends AppCompatActivity {
                 if(documentSnapshot.getBoolean("admin")){
                     //User user2 = (User) documentSnapshot.getData();
                     isAdmin = true;
-                }
 
+                }
             }
         });
     }

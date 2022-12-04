@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce.ui;
 
+import android.content.Intent;
 import androidx.activity.ViewTreeOnBackPressedDispatcherOwner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,9 +55,20 @@ public class ForgetPasswordActivity extends AppCompatActivity {
             }
             //checkUserEmail(binding.emailEdt.getText().toString());
             resetUserPassword(binding.emailEdt.getText().toString());
-
         });
 
+    }
+    public void loginClick(View view){
+        if(view == binding.loginTv){
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+    public void registerClick(View view){
+        if(view == binding.registerTv){
+            Intent intent = new Intent(this,RegisterActivity.class);
+            startActivity(intent);
+        }
     }
 
     void checkUserEmail(String email){
