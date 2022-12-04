@@ -40,4 +40,9 @@
               tools:layout="@layout/fragment_register_category">
         <argument android:name="category" app:argType="com.pucmm.e_commerce.database.Category"/>
     </fragment>
+    <fragment
+        android:id="@+id/registerProductFragment"
+        android:name="com.pucmm.e_commerce.ui.RegisterProductFragment"
+        android:label="fragment_register_product"
+        tools:layout="@layout/fragment_register_product" />
 </navigation>

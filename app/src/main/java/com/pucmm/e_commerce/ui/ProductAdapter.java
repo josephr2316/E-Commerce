@@ -54,7 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Log.i("ENTRAR","adapter product");
 
         holder.uuid.setText(product.getCodigo());
-        holder.price.setText(product.getPrecio().toString());
+        holder.price.setText(product.getPrecio());
         holder.description.setText(product.getDescripcion());
 
     }

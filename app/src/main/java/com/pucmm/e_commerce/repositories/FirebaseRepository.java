@@ -168,6 +168,7 @@ public class FirebaseRepository {
 
                         for (DocumentSnapshot documentSnapshot : list){
                             Log.e(TAG, "ESTA ENTRANDO category" );
+                            Log.e("error categoria",documentSnapshot.toObject(Category.class).getNombre());
                             if (documentSnapshot.toObject(Category.class).getProductList()!=null) {
                                 ArrayList<Product> productArrayList = new ArrayList<>();
 
@@ -197,15 +198,37 @@ public class FirebaseRepository {
 
     public void addProduct(Product product, String nameCategory){
         arrayListProduct .add(product);
+        List<Product> list = new ArrayList<>();
 
         DocumentReference docRef = firebaseFirestore.collection("Categories").document(nameCategory);
 
-        docRef.update("productList",product).addOnSuccessListener(new OnSuccessListener<Void>() {
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(Void unused) {
-                Log.i("prueba", "SE EDITO");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.toObject(Category.class).getProductList()!=null)
+                {
+                    int size = documentSnapshot.toObject(Category.class).getProductList().size();
+                    for ( int i = 0; i < size ; i++) {
+                        list.add(documentSnapshot.toObject(Category.class).getProductList().get(i));
+                    }
+                }
+                list.add(product);
+
+                docRef.update("productList",list).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("prueba", "SE EDITO");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Error",e.toString());
+                    }
+                });
+
             }
         });
+
     }
 
 

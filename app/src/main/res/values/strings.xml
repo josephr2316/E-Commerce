@@ -31,6 +31,8 @@
     <string name="price">Price</string>
     <string name="description">Description</string>
     <string name="add">ADD</string>
+    <string name="agregar_categoria">Agregar categoria</string>
+    <string name="agregar_producto">Agregar producto</string>
     <string-array name="category_options">
         <item>Editar categoria</item>
         <item>Borrar categoria</item>

@@ -4,6 +4,8 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +29,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
+import com.pucmm.e_commerce.database.Product;
+import com.pucmm.e_commerce.database.ProductImage;
 import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
 import com.pucmm.e_commerce.databinding.FragmentRegisterProductBinding;
 import com.pucmm.e_commerce.models.CategoryViewModel;
+import com.pucmm.e_commerce.models.ProductViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 public class RegisterProductFragment extends Fragment {
@@ -40,12 +50,19 @@ public class RegisterProductFragment extends Fragment {
 
     private FragmentRegisterProductBinding binding;
     private CategoryViewModel categoryViewModel;
+    private ProductViewModel productViewModel;
+
 
     //Store image uris in a array list
     private ArrayList<Uri> uriArrayList;
 
+    private ArrayList<Bitmap> bitmapArrayList;
+
     //Store name's categories in a array list
     List<String> nameCategory;
+    List<Category> categoryList;
+
+    List<Product> productList;
 
     ActivityResultLauncher<Intent> activityResultLauncher;
 
@@ -71,17 +88,23 @@ public class RegisterProductFragment extends Fragment {
         //init list
         nameCategory = new ArrayList<>();
         uriArrayList = new ArrayList<>();
+        productList = new ArrayList<>();
+        categoryList = new ArrayList<>();
 
         //init the category's viewModel
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        //binding.imageSwitcher.setImageDrawable(Drawable.createFromPath("drawable/avatar"));
 
         categoryViewModel.init();
+        productViewModel.init();
         categoryViewModel.getLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
 
                 for(Category category : categories){
                     nameCategory.add(category.getNombre());
+                    categoryList.add(category);
                 }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item,nameCategory);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -122,6 +145,29 @@ public class RegisterProductFragment extends Fragment {
         });
 
         binding.addButton.setOnClickListener(viewButton->{
+            String nameCategory = binding.categorySpinner.getSelectedItem().toString();
+            String description = binding.descriptionEditText.getText().toString();
+            String price = binding.priceEditText.getText().toString();
+            ArrayList<String> productImages = new ArrayList<>();
+            String id;
+            Product product = new Product(description,price);
+
+           for (Uri uri : uriArrayList){
+               ImageView imageView = new ImageView(viewButton.getContext());
+               imageView.setImageURI(uri);
+               BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+               Bitmap bitmap = drawable.getBitmap();
+               id = UUID.randomUUID().toString();
+               productImages.add(id);
+               String path = "products/" + id;
+               productViewModel.guardarImagen(path,bitmap);
+            }
+            product.setProductImages(productImages);
+            for (Category category : categoryList){
+                if (category.getNombre().equals(nameCategory))
+                    nameCategory = category.getId();
+            }
+            productViewModel.addProduct(product,nameCategory);
 
         });
 

@@ -8,26 +8,26 @@ import java.util.UUID;
 public class Product {
     private String codigo;
     private String descripcion;
-    private ArrayList<ProductImage> productImages;
-    private Integer precio;
+    private ArrayList<String> productImages;
+    private String precio;
     public Product(){
 
     }
 
-    public Product(String codigo, String descripcion, ArrayList<ProductImage> productImages, Integer precio) {
+    public Product(String codigo, String descripcion, ArrayList<String> productImages, String precio) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.productImages = productImages;
         this.precio = precio;
     }
-    public Product(String descripcion, ArrayList<ProductImage> productImages, Integer precio) {
+    public Product(String descripcion, ArrayList<String> productImages, String precio) {
         this.codigo = UUID.randomUUID().toString();
         this.descripcion = descripcion;
         this.productImages = productImages;
         this.precio = precio;
     }
 
-    public Product(String descripcion, Integer precio) {
+    public Product(String descripcion, String precio) {
         this.codigo = UUID.randomUUID().toString();
         this.descripcion = descripcion;
         this.precio = precio;
@@ -48,19 +48,19 @@ public class Product {
         this.descripcion = descripcion;
     }
 
-    public ArrayList<ProductImage> getProductImages() {
+    public ArrayList<String> getProductImages() {
         return productImages;
     }
 
-    public void setProductImages(ArrayList<ProductImage> productImages) {
+    public void setProductImages(ArrayList<String> productImages) {
         this.productImages = productImages;
     }
 
-    public Integer getPrecio() {
+    public String getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(String precio) {
         this.precio = precio;
     }
 

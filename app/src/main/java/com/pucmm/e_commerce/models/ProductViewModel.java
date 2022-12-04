@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce.models;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -24,10 +25,15 @@ public class ProductViewModel  extends ViewModel {
 
     }
 
-    void addProduct(Product product,String name){
+    public void addProduct(Product product,String name){
         firebaseRepository.addProduct(product,name);
 
     }
+
+    public void guardarImagen(String id, Bitmap image) {
+        firebaseRepository.guardarImagen(id,image);
+    }
+
     public MutableLiveData<ArrayList<Product>> getLiveData() {
         Log.e("LIVEDATA", liveData.toString());
         return liveData;
