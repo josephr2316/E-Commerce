@@ -2,26 +2,41 @@ package com.pucmm.e_commerce.ui;
 
 import android.content.Context;
 import android.media.MediaDrm;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private final List<Product> productList;
+    private List<Product> productList;
     private Context context;
 
-    public ProductAdapter(List<Product> productList) {this.productList = productList;}
+    public ProductAdapter(){
+
+    }
+
+    public void setProductList (List<Product> productList){
+        this.productList = productList;
+        notifyDataSetChanged();
+    }
+
+    public void filterList (List<Product> filterList){
+        this.productList = filterList;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -35,10 +50,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductAdapter.ProductViewHolder holder, int position) {
 
         Product product = productList.get(position);
-        String uuid;
-        String image;
-        String price;
-        String description;
+
+        Log.i("ENTRAR","adapter product");
+
+        holder.uuid.setText(product.getCodigo());
+        holder.price.setText(product.getPrecio().toString());
+        holder.description.setText(product.getDescripcion());
 
     }
 
@@ -50,9 +67,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
-        private EditText uuid;
-        private EditText price;
-        private EditText description;
+        private TextView uuid;
+        private TextView price;
+        private TextView description;
         private ImageView setting;
 
         public ProductViewHolder(@NonNull View itemView) {

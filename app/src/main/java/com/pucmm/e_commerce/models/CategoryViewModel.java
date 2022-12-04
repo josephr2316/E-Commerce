@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce.models;
 
+
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -20,7 +21,9 @@ public class CategoryViewModel extends ViewModel {
             return;
         }
         firebaseRepository = FirebaseRepository.getInstance();
+        //liveData = firebaseRepository.getCategory();
         liveData = firebaseRepository.getList();
+
     }
 
     void addCategory(){

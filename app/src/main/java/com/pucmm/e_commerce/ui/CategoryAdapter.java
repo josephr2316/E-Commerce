@@ -23,11 +23,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private  List<Category> categoryList;
     private Context context;
 
-
-
    // public CategoryAdapter(List<Category> list) {this.categoryList = list;}
     public CategoryAdapter( ){}
-
 
     public void setCategoryList (List<Category> categoryList){
         this.categoryList = categoryList;
@@ -50,7 +47,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Category category = categoryList.get(position);
 
         Log.i("ENTRAR", category.getNombre());
-        holder.name.setText(category.getNombre().toString());
+        holder.name.setText(category.getNombre());
         String image;
 
     }

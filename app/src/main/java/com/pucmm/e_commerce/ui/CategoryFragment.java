@@ -61,8 +61,6 @@ public class CategoryFragment extends Fragment {
         
         int spanCount = 1;
         binding.recyclerView.setHasFixedSize(true);
-
-
         super.onViewCreated(view, savedInstanceState);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             spanCount = 2;
@@ -82,12 +80,12 @@ public class CategoryFragment extends Fragment {
             public void onChanged(ArrayList<Category> categories) {
                 Log.i("VALOR", String.valueOf(categories.size()));
                 categoryAdapter.setCategoryList(categories);
-                firebaseListener();
+                //firebaseListener();
                 binding.recyclerView.setAdapter(categoryAdapter);
+
+
             }
         });
-
-
 
     }
     void firebaseListener(){

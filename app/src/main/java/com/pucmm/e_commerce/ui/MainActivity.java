@@ -8,6 +8,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +46,12 @@ import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
+import com.pucmm.e_commerce.models.ProductViewModel;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private TextView emailHeader;
     private AppBarConfiguration appBarConfiguration;
+    private ProductViewModel productViewModel;
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseStorage firebaseStorage;
@@ -103,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                         collectionReference.add(category);
 
                     }
+                }
+                else{
+                    if(currentFragment instanceof ProductFragment)
+                        navController.navigate(R.id.registerProductFragment);
                 }
             }
         });
@@ -310,8 +322,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUserAccessLevel(String uid){
-
-
+        
         DocumentReference df = firebaseFirestore.collection("Users").document(uid);
         df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -326,6 +337,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+
 
 /*
 * */

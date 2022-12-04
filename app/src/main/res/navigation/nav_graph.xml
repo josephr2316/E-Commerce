@@ -21,10 +21,19 @@
         android:id="@+id/productFragment"
         android:name="com.pucmm.e_commerce.ui.ProductFragment"
         android:label="Products"
-        tools:layout="@layout/fragment_product" />
+        tools:layout="@layout/fragment_product" >
+        <action
+            android:id="@+id/action_productFragment_to_registerProductFragment"
+            app:destination="@id/registerProductFragment" />
+    </fragment>
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.pucmm.e_commerce.ui.CategoryFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_category" />
+    <fragment
+        android:id="@+id/registerProductFragment"
+        android:name="com.pucmm.e_commerce.ui.RegisterProductFragment"
+        android:label="fragment_register_product"
+        tools:layout="@layout/fragment_register_product" />
 </navigation>

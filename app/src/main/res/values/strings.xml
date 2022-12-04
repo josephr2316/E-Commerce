@@ -28,5 +28,8 @@
         <item>Cancel</item>
     </string-array>
     <string name="hello_blank_fragment"> Hello</string>
+    <string name="price">Price</string>
+    <string name="description">Description</string>
+    <string name="add">ADD</string>
 
 </resources>
