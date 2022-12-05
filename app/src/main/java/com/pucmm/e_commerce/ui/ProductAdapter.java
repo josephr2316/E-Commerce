@@ -23,6 +23,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private List<Product> productList;
     private Context context;
+    private boolean isAdmin;
 
     public ProductAdapter(){
 
@@ -36,6 +37,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void filterList (List<Product> filterList){
         this.productList = filterList;
         notifyDataSetChanged();
+    }
+    public void checkAdmin(boolean isAdmin){
+        this.isAdmin = isAdmin;
+
     }
 
     @NonNull
@@ -56,6 +61,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.uuid.setText(product.getCodigo());
         holder.price.setText(product.getPrecio());
         holder.description.setText(product.getDescripcion());
+        disableSetting(holder.setting);
 
     }
 
@@ -80,6 +86,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             description = itemView.findViewById(R.id.description_tv);
             setting = itemView.findViewById(R.id.setting_imageview);
         }
+    }
+    public void disableSetting(ImageView setting){
+        if (!isAdmin)
+            setting.setVisibility(View.GONE);
+        else
+            setting.setVisibility(View.VISIBLE);
+
     }
 
 }

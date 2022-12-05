@@ -42,6 +42,7 @@ public class ProductFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     public ProductAdapter productAdapter;
     private ProductViewModel productViewModel;
+    private boolean isAdmin;
 
 
     @Override
@@ -92,6 +93,8 @@ public class ProductFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = getArguments();
+        isAdmin = bundle.getBoolean("admin");
         int spanCount = 1;
         binding.recyclerView.setHasFixedSize(true);
         super.onViewCreated(view, savedInstanceState);
@@ -100,6 +103,7 @@ public class ProductFragment extends Fragment {
         }
         binding.recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
         productAdapter = new ProductAdapter();
+        productAdapter.checkAdmin(isAdmin);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         list = new ArrayList<>();

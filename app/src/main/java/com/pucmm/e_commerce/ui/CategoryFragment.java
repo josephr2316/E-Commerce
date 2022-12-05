@@ -96,7 +96,6 @@ public class CategoryFragment extends Fragment {
 
         Bundle bundle = getArguments();
         isAdmin = bundle.getBoolean("admin");
-        Toast.makeText(getContext(),String.valueOf(isAdmin),Toast.LENGTH_SHORT).show();
         int spanCount = 1;
         binding.recyclerView.setHasFixedSize(true);
         super.onViewCreated(view, savedInstanceState);
