@@ -1,6 +1,7 @@
 package com.pucmm.e_commerce.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaDrm;
@@ -11,12 +12,17 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,13 +30,17 @@ import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private List<Product> productList;
     private Context context;
+    private static final int EDITAR_PRODUCT= 0;
+    private static final int BORRAR_PRODUCT = 1;
     private boolean isAdmin;
+    private String nameCategory;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -52,6 +62,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.isAdmin = isAdmin;
 
     }
+
+    public void removeProductList(Product product){
+        this.productList.remove(product);
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -93,11 +109,52 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "This is the setting for the product adapterc", Toast.LENGTH_SHORT).show();
+                dialogOptions(context, product, view);
             }
         });
         Log.e("category_adapter", "despues de la imagen");
-
     }
+
+    private void dialogOptions(Context context, Product product, View view){
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setTitle("Seleccione una opcion:")
+                .setItems(R.array.product_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == EDITAR_PRODUCT){
+                            NavDirections navDirections = ProductFragmentDirections.actionProductFragmentToRegisterProductFragment(product);
+                            NavController navController = Navigation.findNavController(view);
+                            navController.navigate(navDirections);
+                        } else if (which==BORRAR_PRODUCT) {
+                            dialogConfirm(context, product);
+                        }
+                        else{
+                            dialog.dismiss();
+                        }
+                    }
+                });
+        builder1.show();
+    }
+    private void dialogConfirm(Context context, Product product){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirma");
+        builder.setMessage("Estas seguro?");
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing but close the dialog
+                loadProduct(product);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public int getItemCount() {
         return productList.size();
@@ -127,6 +184,60 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         else
             setting.setVisibility(View.VISIBLE);
 
+    }
+    private void loadProduct(Product productCheck){
+        List<Product> products = new ArrayList<>();
+        firebaseFirestore.collection("Categories")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()){
+                        List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                        for (DocumentSnapshot documentSnapshot : list){
+                            if (documentSnapshot.toObject(Category.class).getProductList()!=null) {
+                                ArrayList<Product> productArrayList = new ArrayList<>();
+
+                                int size = documentSnapshot.toObject(Category.class).getProductList().size();
+
+                                for ( int i = 0; i < size ; i++) {
+                                    productArrayList.add(documentSnapshot.toObject(Category.class).getProductList().get(i));
+                                }
+                                for (Product productf : productArrayList) {
+                                    if(productf.getCodigo().equals(productCheck.getCodigo()) || nameCategory!=null){
+                                        removeProductList(productf);
+                                        nameCategory = documentSnapshot.toObject(Category.class).getId();
+                                        if(!productf.getCodigo().equals(productCheck.getCodigo())){
+                                            products.add(productf);
+
+                                        }
+                                    }
+                                }
+                                if  (nameCategory!=null)
+                                {
+                                    DocumentReference docRef = firebaseFirestore.collection("Categories").document(nameCategory);
+                                    docRef.update("productList",products).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.i("prueba", "SE EDITO");
+                                            nameCategory = null;
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("ErrorDelete",e.toString());
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Log.e("error","onFailure",e);
+                    }
+                });
     }
 
 }

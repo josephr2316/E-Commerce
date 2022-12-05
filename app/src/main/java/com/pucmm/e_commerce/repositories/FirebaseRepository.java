@@ -206,7 +206,6 @@ public class FirebaseRepository {
                         Log.e(TAG,"onFailure",e);
                     }
                 });
-
     }
 
     public void addProduct(Product product, String nameCategory){

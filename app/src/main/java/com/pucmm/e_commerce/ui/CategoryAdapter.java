@@ -86,7 +86,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryAdapter.CategoryViewHolder holder, int position) {
 
         Category category = categoryList.get(position);
-
         Log.i("ENTRAR", category.getNombre());
         holder.name.setText(category.getNombre().toString());
         disableSetting(holder.setting_button);
