@@ -37,6 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
+import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.repositories.FirebaseRepository;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public void setCategoryList (List<Category> categoryList){
         this.categoryList = categoryList;
+        notifyDataSetChanged();
+    }
+
+    public void filterList (List<Category> filterList){
+        this.categoryList = filterList;
         notifyDataSetChanged();
     }
 

@@ -120,11 +120,17 @@ public class ProductFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
+    }
+
     private void filter(String text){
         List<Product> filterProduct = new ArrayList<>();
 
         for(Product product : list){
-            if (product.getCodigo().toLowerCase().contains(text.toLowerCase())) {
+            if (product.getDescripcion().toLowerCase().contains(text.toLowerCase())) {
                 filterProduct.add(product);
             }
         }

@@ -85,13 +85,14 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getCurrentUser().getUid();
 
-
         Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
         disable= false;
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         itemRegister = nav_menu.findItem(R.id.registerUser);
+
         checkUserAccessLevel(userUID);
+        disableFloatingButton();
 
         binding.floatingActionButton.setOnClickListener(view -> {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
@@ -310,6 +311,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    void disableFloatingButton(){
+        if (!isAdmin){
+            binding.floatingActionButton.setVisibility(View.GONE);
+        }
+        else
+            binding.floatingActionButton.setVisibility(View.VISIBLE);
+
     }
 }
 

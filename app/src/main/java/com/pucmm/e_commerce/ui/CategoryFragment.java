@@ -3,9 +3,14 @@ package com.pucmm.e_commerce.ui;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,7 +29,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pucmm.e_commerce.R;
 import com.pucmm.e_commerce.database.Category;
+import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.databinding.FragmentCategoryBinding;
 import com.pucmm.e_commerce.models.CategoryViewModel;
 import com.pucmm.e_commerce.repositories.FirebaseRepository;
@@ -53,6 +60,33 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater,container,false);
         View viewCategory = binding.getRoot();
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                MenuItem searchItem = menu.findItem(R.id.search);
+                SearchView searchView = (SearchView) searchItem.getActionView();
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        filter(newText);
+                        return false;
+                    }
+                });
+
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return false;
+            }
+        });
         return viewCategory;
     }
 
@@ -79,6 +113,8 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<Category> categories) {
                 Log.i("VALOR", String.valueOf(categories.size()));
+                for (Category category: categories)
+                    list.add(category);
                 categoryAdapter.setCategoryList(categories);
 //                firebaseListener();
                 binding.recyclerView.setAdapter(categoryAdapter);
@@ -128,6 +164,23 @@ public class CategoryFragment extends Fragment {
     public void onDestroyView() {
         binding = null;
         super.onDestroyView();
+    }
+
+    private void filter(String text){
+        List<Category> filterCategory = new ArrayList<>();
+
+        for(Category category : list){
+            if (category.getNombre().toLowerCase().contains(text.toLowerCase())) {
+                filterCategory.add(category);
+            }
+        }
+        if (filterCategory.isEmpty()){
+            Toast.makeText(getContext(), "No Data Found..", Toast.LENGTH_SHORT).show();
+        }
+        else
+            categoryAdapter.filterList(filterCategory);
+
+
     }
 
 }
