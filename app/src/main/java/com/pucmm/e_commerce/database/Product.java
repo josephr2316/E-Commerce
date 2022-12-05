@@ -1,11 +1,12 @@
 package com.pucmm.e_commerce.database;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Product {
+public class Product implements Serializable {
     private String codigo;
     private String descripcion;
     private ArrayList<String> productImages;
@@ -66,5 +67,9 @@ public class Product {
 
     public void generarCodigo(){
         this.codigo = UUID.randomUUID().toString();
+    }
+
+    public String getFirstImage(){
+        return this.productImages.get(0);
     }
 }

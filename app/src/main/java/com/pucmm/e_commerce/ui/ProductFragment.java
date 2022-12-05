@@ -107,7 +107,6 @@ public class ProductFragment extends Fragment {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         list = new ArrayList<>();
-
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         productViewModel.init();
         productViewModel.getLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Product>>() {

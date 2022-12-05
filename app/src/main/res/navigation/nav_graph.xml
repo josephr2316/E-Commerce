@@ -25,6 +25,7 @@
         <action
             android:id="@+id/action_productFragment_to_registerProductFragment"
             app:destination="@id/registerProductFragment" />
+        <action android:id="@+id/action_productFragment_to_detailsProduct" app:destination="@id/detailsProductFragment"/>
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
@@ -43,9 +44,12 @@
               tools:layout="@layout/fragment_register_category">
         <argument android:name="category" app:argType="com.pucmm.e_commerce.database.Category"/>
     </fragment>
-    <fragment
-        android:id="@+id/registerProductFragment"
-        android:name="com.pucmm.e_commerce.ui.RegisterProductFragment"
-        android:label="fragment_register_product"
-        tools:layout="@layout/fragment_register_product" />
+    <fragment android:id="@+id/registerProductFragment"
+              android:name="com.pucmm.e_commerce.ui.RegisterProductFragment"
+              android:label="Gestion de Producto"
+              tools:layout="@layout/fragment_register_product"/>
+    <fragment android:id="@+id/detailsProductFragment" android:name="com.pucmm.e_commerce.ui.DetailsProductFragment"
+              android:label="Detalles producto" tools:layout="@layout/fragment_details_product">
+        <argument android:name="product" app:argType="com.pucmm.e_commerce.database.Product"/>
+    </fragment>
 </navigation>

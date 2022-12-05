@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.widget.*;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,10 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ViewSwitcher;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pucmm.e_commerce.R;
@@ -169,6 +166,7 @@ public class RegisterProductFragment extends Fragment {
                     nameCategory = category.getId();
             }
             productViewModel.addProduct(product,nameCategory);
+            Toast.makeText(getContext(), "Producto agregado", Toast.LENGTH_SHORT).show();
 
         });
 

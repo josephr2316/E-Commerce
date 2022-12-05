@@ -72,9 +72,13 @@ public class FirebaseRepository {
     }
 
     public void addCategory(Category category ){
-        arrayList.add(category);
         CollectionReference collectionReference = firebaseFirestore.collection("Categories");
-        collectionReference.document(category.getId()).set(category);
+        collectionReference.document(category.getId()).set(category).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                arrayList.add(category);
+            }
+        });
     }
     public void updateCategory(Category category){
         Map<String, Object> categoryUpdateData = new HashMap<>();

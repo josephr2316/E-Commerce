@@ -61,6 +61,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.categoryList = categoryList;
         notifyDataSetChanged();
     }
+    public void removeCategoryList(Category category){
+        this.categoryList.remove(category);
+        notifyDataSetChanged();
+    }
 
     public void filterList (List<Category> filterList){
         this.categoryList = filterList;
@@ -110,7 +114,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     public void onClick(DialogInterface dialog, int which) {
                         if(which == EDITAR_CATEGORY){
                             NavDirections navDirections = CategoryFragmentDirections.actionCategoryFragmentToRegisterCategoryFragment(category);
-                            NavController   navController = Navigation.findNavController(view);
+                            NavController navController = Navigation.findNavController(view);
                             navController.navigate(navDirections);
                         } else if (which==BORRAR_CATEGORY) {
                             dialogConfirm(context, category);
@@ -129,12 +133,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
-                Log.i("error", category.getId());
                 firebaseFirestore.collection("Categories").document(category.getId())
                         .delete()
                         .addOnSuccessListener(unused -> {
                             Log.i("Categoria", "Eliminada");
-                            notifyDataSetChanged();
+                            removeCategoryList(category);
                             dialog.dismiss();
                         })
                         .addOnFailureListener(e -> Log.e("No se pudo eliminar","eliminando"));
