@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         itemRegister = nav_menu.findItem(R.id.registerUser);
-
-        checkUserAccessLevel(userUID);
         disableFloatingButton();
+        checkUserAccessLevel(userUID);
+
 
         binding.floatingActionButton.setOnClickListener(view -> {
             Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
@@ -194,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
         //NavigationUI.setupWithNavController( binding.navView,navController);
 //
         binding.navView.setNavigationItemSelectedListener(item -> {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("admin",isAdmin);
                switch (item.getItemId()){
                    case R.id.registerUser:
                        Intent intentRegister = new Intent(this,RegisterActivity.class);
@@ -208,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
                        break;
 
                    case R.id.categoryFragment:
-                       navController.navigate(R.id.categoryFragment);
+                       navController.navigate(R.id.categoryFragment,bundle);
                        binding.drawer.close();
                        break;
 
                    case R.id.productFragment:
-                       navController.navigate(R.id.productFragment);
+                       navController.navigate(R.id.productFragment,bundle);
                        binding.drawer.close();
                        break;
 
@@ -307,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 if(documentSnapshot.getBoolean("admin")){
                     //User user2 = (User) documentSnapshot.getData();
                     isAdmin = true;
-
+                    disableFloatingButton();
                 }
             }
         });
@@ -319,8 +321,10 @@ public class MainActivity extends AppCompatActivity {
         else
             binding.floatingActionButton.setVisibility(View.VISIBLE);
 
+
     }
 }
+
 
 
 /*

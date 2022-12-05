@@ -115,6 +115,7 @@ public class RegisterProductFragment extends Fragment {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                uriArrayList.clear();
                 if (result.getResultCode() == RESULT_OK && result.getData().getClipData() != null) {
                     int counter = result.getData().getClipData().getItemCount();
                     for (int i = 0; i < counter; i++){

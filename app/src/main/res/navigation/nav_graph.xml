@@ -33,6 +33,9 @@
         tools:layout="@layout/fragment_category" >
         <action android:id="@+id/action_categoryFragment_to_registerCategoryFragment"
                 app:destination="@id/registerCategoryFragment"/>
+        <argument
+            android:name="admin"
+            app:argType="boolean" />
     </fragment>
     <fragment android:id="@+id/registerCategoryFragment"
               android:name="com.pucmm.e_commerce.ui.RegisterCategoryFragment"

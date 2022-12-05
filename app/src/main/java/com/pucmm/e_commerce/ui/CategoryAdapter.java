@@ -50,6 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private FirebaseRepository firebaseRepository;
     private static final int EDITAR_CATEGORY = 0;
     private static final int BORRAR_CATEGORY = 1;
+    private boolean isAdmin;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -64,6 +65,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void filterList (List<Category> filterList){
         this.categoryList = filterList;
         notifyDataSetChanged();
+    }
+    public void checkAdmin(boolean isAdmin){
+        this.isAdmin = isAdmin;
+
     }
 
     @NonNull
@@ -80,6 +85,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         Log.i("ENTRAR", category.getNombre());
         holder.name.setText(category.getNombre().toString());
+        disableSetting(holder.setting_button);
         StorageReference reference = firebaseStorage.getReference().child("images/"+category.getImagen());
         final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -161,6 +167,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             name = itemView.findViewById(R.id.categoryName_tv);
             setting_button = itemView.findViewById(R.id.setting_bt);
         }
+    }
+
+    public void disableSetting(ImageView setting){
+        if (!isAdmin)
+            setting.setVisibility(View.GONE);
+        else
+            setting.setVisibility(View.VISIBLE);
+
     }
 
 }

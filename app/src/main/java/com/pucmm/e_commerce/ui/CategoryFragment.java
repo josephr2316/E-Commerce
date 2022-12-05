@@ -46,6 +46,7 @@ public class CategoryFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     public CategoryAdapter categoryAdapter;
     private CategoryViewModel categoryViewModel;
+    private boolean isAdmin;
 
 
 
@@ -92,7 +93,10 @@ public class CategoryFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        
+
+        Bundle bundle = getArguments();
+        isAdmin = bundle.getBoolean("admin");
+        Toast.makeText(getContext(),String.valueOf(isAdmin),Toast.LENGTH_SHORT).show();
         int spanCount = 1;
         binding.recyclerView.setHasFixedSize(true);
         super.onViewCreated(view, savedInstanceState);
@@ -102,6 +106,7 @@ public class CategoryFragment extends Fragment {
         //recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
         categoryAdapter = new CategoryAdapter();
+        categoryAdapter.checkAdmin(isAdmin);
 
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -118,6 +123,7 @@ public class CategoryFragment extends Fragment {
                 categoryAdapter.setCategoryList(categories);
 //                firebaseListener();
                 binding.recyclerView.setAdapter(categoryAdapter);
+
 
 
             }
