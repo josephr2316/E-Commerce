@@ -125,14 +125,15 @@ public class DetailsProductFragment extends Fragment {
         binding.addcartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CarritoCompras carritoCompras =  localRepository.obtenerCarrito(getContext().getSharedPreferences("carrito", getContext().MODE_WORLD_WRITEABLE));
+                CarritoCompras carritoCompras =  localRepository.obtenerCarrito(getContext().getSharedPreferences("carrito", getContext().MODE_WORLD_READABLE));
+                Log.e("Carrito", localRepository.returnJsonFromObject(carritoCompras));
                 carritoCompras.setProductID(mParam1.getCodigo(), Integer.valueOf(binding.textView3.getText().toString()));
                 try {
                     localRepository.guardarCarrito(getContext().getSharedPreferences("carrito", getContext().MODE_APPEND), carritoCompras);
                 } catch (JsonProcessingException e) {
                     Toast.makeText(getContext(), "Llevatelo que ya exploto", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), carritoCompras.getId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Producto agregado a su carrito", Toast.LENGTH_SHORT).show();
             }
         });
 

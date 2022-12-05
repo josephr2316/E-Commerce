@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getCurrentUser().getUid();
         try {
-            carritoCompras = localRepository.obtenerCarrito(this.getSharedPreferences("carrito", Context.MODE_WORLD_WRITEABLE));
+            carritoCompras = localRepository.obtenerCarrito(this.getSharedPreferences("carrito", this.MODE_WORLD_READABLE));
         }catch (Exception e){
             carritoCompras = new CarritoCompras();
             try {
-                localRepository.guardarCarrito(this.getSharedPreferences("carrito", Context.MODE_APPEND), carritoCompras);
+                localRepository.guardarCarrito(this.getSharedPreferences("carrito", this.MODE_APPEND), carritoCompras);
             } catch (JsonProcessingException ex) {
                 Toast.makeText(this, "Problema otro", Toast.LENGTH_SHORT).show();
             }
