@@ -89,6 +89,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 navController.navigate(navDirections);
             }
         });
+        holder.setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "This is the setting for the product adapterc", Toast.LENGTH_SHORT).show();
+            }
+        });
         Log.e("category_adapter", "despues de la imagen");
 
     }
