@@ -20,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pucmm.e_commerce.database.CarritoCompras;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.ui.RegisterActivity;
@@ -77,6 +78,14 @@ public class FirebaseRepository {
             @Override
             public void onSuccess(Void unused) {
                 arrayList.add(category);
+            }
+        });
+    }
+    public void addCarrito(CarritoCompras carritoCompras ){
+        CollectionReference collectionReference = firebaseFirestore.collection("Compras");
+        collectionReference.document(carritoCompras.getId()).set(carritoCompras).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
             }
         });
     }

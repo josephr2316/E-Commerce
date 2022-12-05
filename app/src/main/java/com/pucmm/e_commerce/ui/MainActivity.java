@@ -1,5 +1,6 @@
 package com.pucmm.e_commerce.ui;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,11 +43,13 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.CarritoCompras;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.database.User;
 import com.pucmm.e_commerce.databinding.ActivityMainBinding;
 import com.pucmm.e_commerce.models.ProductViewModel;
+import com.pucmm.e_commerce.repositories.LocalRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -66,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
     NavHostFragment navHostFragment;
     NavController navController;
 
+    private LocalRepository localRepository = LocalRepository.getInstance();
 
     private boolean disable;
     private String userUID;
     private FirebaseAuth firebaseAuth;
     MenuItem itemRegister;
     boolean isAdmin;
+    private CarritoCompras carritoCompras;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -84,7 +90,16 @@ public class MainActivity extends AppCompatActivity {
         Menu nav_menu = binding.navView.getMenu();
         firebaseAuth = FirebaseAuth.getInstance();
         userUID = firebaseAuth.getCurrentUser().getUid();
-
+        try {
+            carritoCompras = localRepository.obtenerCarrito(this.getSharedPreferences("carrito", Context.MODE_WORLD_WRITEABLE));
+        }catch (Exception e){
+            carritoCompras = new CarritoCompras();
+            try {
+                localRepository.guardarCarrito(this.getSharedPreferences("carrito", Context.MODE_APPEND), carritoCompras);
+            } catch (JsonProcessingException ex) {
+                Toast.makeText(this, "Problema otro", Toast.LENGTH_SHORT).show();
+            }
+        }
         disable= false;
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();

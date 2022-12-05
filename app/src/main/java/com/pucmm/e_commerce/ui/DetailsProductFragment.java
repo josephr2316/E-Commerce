@@ -22,22 +22,27 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pucmm.e_commerce.R;
+import com.pucmm.e_commerce.database.CarritoCompras;
 import com.pucmm.e_commerce.database.Category;
 import com.pucmm.e_commerce.database.Product;
 import com.pucmm.e_commerce.databinding.FragmentDetailsProductBinding;
 import com.pucmm.e_commerce.databinding.FragmentHomeBinding;
 import com.pucmm.e_commerce.databinding.FragmentRegisterCategoryBinding;
 import com.pucmm.e_commerce.repositories.FirebaseRepository;
+import com.pucmm.e_commerce.repositories.LocalRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +65,8 @@ public class DetailsProductFragment extends Fragment {
     private FirebaseRepository firebaseRepository = FirebaseRepository.getInstance();
 
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    private LocalRepository localRepository = LocalRepository.getInstance();
+
 
     /**
      * Use this factory method to create a new instance of
@@ -113,6 +120,19 @@ public class DetailsProductFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 binding.textView3.setText(String.valueOf(Integer.parseInt(binding.textView3.getText().toString())+1));
+            }
+        });
+        binding.addcartBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CarritoCompras carritoCompras =  localRepository.obtenerCarrito(getContext().getSharedPreferences("carrito", getContext().MODE_WORLD_WRITEABLE));
+                carritoCompras.setProductID(mParam1.getCodigo(), Integer.valueOf(binding.textView3.getText().toString()));
+                try {
+                    localRepository.guardarCarrito(getContext().getSharedPreferences("carrito", getContext().MODE_APPEND), carritoCompras);
+                } catch (JsonProcessingException e) {
+                    Toast.makeText(getContext(), "Llevatelo que ya exploto", Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(getContext(), carritoCompras.getId(), Toast.LENGTH_SHORT).show();
             }
         });
 
